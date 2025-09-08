@@ -2,6 +2,7 @@ package com.example.BookManagementSpringBoot.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.BookManagementSpringBoot.dto.BookDto;
@@ -12,10 +13,22 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class BookService {
 
+
+	@Autowired
 	private final BookRepository bookRepo;
+	
+	public BookService(BookRepository bookRepo) {
+		super();
+		this.bookRepo = bookRepo;
+	}
+
+
+	public Book create(BookDto dto) {
+		Book book=fromDto(dto);
+		return bookRepo.save(book);
+	} 
 	
 	public List<Book> getAllBooks(){
 		return bookRepo.findAll();
@@ -28,10 +41,6 @@ public class BookService {
 	}
 	
 	
-	public Book create(BookDto dto) {
-		Book book=fromDto(dto);
-		return bookRepo.save(book);
-	} 
 	
 	
 	public Book update(Long id, BookDto dto) {
@@ -54,12 +63,8 @@ public class BookService {
 	}
 
 	private Book fromDto(BookDto d) {
-        return Book.builder()
-                .id(d.getId())
-                .title(d.getTitle())
-                .author(d.getAuthor())
-                .yearPublished(d.getYearPublished())
-                .build();
+        return new Book(d.getId(),d.getTitle(),d.getAuthor(),d.getYearPublished());
+                
     }
 
 

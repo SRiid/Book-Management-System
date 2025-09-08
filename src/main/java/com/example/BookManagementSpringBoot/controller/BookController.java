@@ -24,13 +24,17 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 
-@RequiredArgsConstructor
 @RequestMapping("/api/books")
 public class BookController {
 
 	@Autowired
 	private BookService service;
 	
+	public BookController(BookService service) {
+		super();
+		this.service = service;
+	}
+
 	@GetMapping
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<List<Book>> getAll(){
